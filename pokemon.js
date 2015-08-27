@@ -154,11 +154,18 @@ var pokemonList = [
 
 function createPreloadedImages(){
     var url = '';
+    var html = "";
     for (var i = 0; i < pokemonList.length; i++){
         var pokemonPosition = pokemonList[i].id;
         url = 'images/' + pokemonPosition + '.png';
         preloadImage(url);
+        html = 'Preloading all images: ' + i + '/' + (pokemonList.length - 1);
+        document.getElementById("pokemonCatchInfo").innerHTML = html;
+        if (i === pokemonList.length - 1) {
+            html = 'Done loading all images';
+        };
     };
+    document.getElementById("pokemonCatchInfo").innerHTML = html;
 };
 createPreloadedImages();
 
