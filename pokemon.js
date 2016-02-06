@@ -728,8 +728,11 @@ function createPreloadedImages(){
     for (var i = 0; i < pokemonList.length; i++){
         var pokemonPosition = pokemonList[i].id;
         url = 'images/' + pokemonPosition + '.gif';
-        preloadImage(url);
-        html = 'Preloading all images: ' + i + '/' + (pokemonList.length - 1);
+        var preloadTest = preloadImage(url);
+        preloadTest.onload = function(){
+            html = 'Preloading all images: ' + i + '/' + (pokemonList.length - 1);
+         };
+
         document.getElementById("pokemonCatchInfo").innerHTML = html;
         if (i === pokemonList.length - 1) {
             html = 'Done loading all images';
@@ -742,6 +745,7 @@ createPreloadedImages();
 function preloadImage(url) {
     var img = new Image();
     img.src = url;
+    return img;
 };
 
 var caughtPokemon = [];
