@@ -23,55 +23,36 @@ function preloadImage(url) {
 
 var caughtPokemon = [];
 var player = {
-	caught:{
-	fire: 0,
-	water: 0,
-	grass: 0,
-	electric: 0,
-	normal: 0,
-	psychic: 0,
-	dragon: 0,
-	ghost: 0,
-	rock: 0,
-	ground: 0,
-	poison: 0,
-	fighting: 0,
-	flying: 0,
-	bug: 0,
-	ice: 0,
-  fairy:0,
-  steel:0,
-  dark:0
-	},
-	maxType:{
-	fireMax: 0,
-	waterMax: 0,
-	grassMax: 0,
-	electricMax: 0,
-	normalMax: 0,
-	psychicMax: 0,
-	dragonMax: 0,
-	ghostMax: 0,
-	rockMax: 0,
-	groundMax: 0,
-	poisonMax: 0,
-	fightingMax: 0,
-	flyingMax: 0,
-	bugMax: 0,
-	iceMax: 0,
-  fairyMax:0,
-  steelMax:0,
-  darkMax:0
-	}
+	caught:{},
+	maxType:{}
 };
 function getAllPokemonTypes(){
 	for (var i = 0; i < pokemonList.length; i++){
-		var type = firstToLowerCase(pokemonList[i].type + "Max");
-    var type2 = firstToLowerCase(pokemonList[i].type2 + "Max");
-    if(type2 !== "noneMax"){
-  		player.maxType[type2] += 1;
+    var type = firstToLowerCase(pokemonList[i].type);
+    var type2 = firstToLowerCase(pokemonList[i].type2);
+		var typeMax = firstToLowerCase(pokemonList[i].type + "Max");
+    var typeMax2 = firstToLowerCase(pokemonList[i].type2 + "Max");
+    if(!player.caught.hasOwnProperty(type)){
+      player.caught[type] = 0;
     }
-    player.maxType[type] += 1;
+    else if(!player.caught.hasOwnProperty(type2)){
+      player.caught[type2] = 0;
+    }
+    if(player.maxType.hasOwnProperty(typeMax2)){
+      if(typeMax2 !== "noneMax"){
+    		player.maxType[typeMax2] += 1;
+      }
+    }
+    else{
+      player.maxType[typeMax2] = 0;
+    }
+    if(player.maxType.hasOwnProperty(typeMax)){
+          player.maxType[typeMax] += 1;
+    }
+    else{
+      player.maxType[typeMax] = 0;
+    }
+
 	};
 };
 getAllPokemonTypes();
@@ -88,7 +69,7 @@ function getPokemon(){
 	html += '</div>';
 	html += '<div class="row">';
 	html += '<div class="col-xs-4 col-xs-offset-4">';
-	html += randomPokemon.id + " - " + randomPokemon.name + " - " + randomPokemon.type + ", " + randomPokemon.type2 + " (Catch rate: "  + randomPokemon.chance + "%)";
+	html += randomPokemon.id + " - " + randomPokemon.name + " - " + randomPokemon.type + ", " + randomPokemon.type2 + " (Catch rate: "  + randomPokemon.chance + ")";
 	html += '<div class="row"><div class="col-xs-12">'
 	html += '<button type="button" onclick="catchPokemon(' + index + ')">Catch it!</button>';
 	html += '</div>';
@@ -110,7 +91,7 @@ function catchPokemon(index){
 	var randomPokemon = pokemonList[index];
 	var type = firstToLowerCase(randomPokemon.type);
   var type2 = firstToLowerCase(randomPokemon.type2);
-	var randomNumber = Math.floor(Math.random() * 100) + 1;
+	var randomNumber = Math.floor(Math.random() * 255) + 1;//255 as in pokeball chance: normal 0-255, great: 0-200, ultra: 0-150, 0-2 means you always catch, since lowest catch rate is 3 on pokemons.
 	var html = "";
 	if (randomNumber <= randomPokemon.chance){
 		player.caught[type] += 1;
@@ -120,7 +101,7 @@ function catchPokemon(index){
 		createPokemonInfo();
 		html += "You caught " + randomPokemon.name;
 		document.getElementById("pokemonCatchInfo").innerHTML = html;
-		pokemonList.splice(index,1);
+		pokemonList.splice(index,1);//Remove Caught pokemon
 	}
 	else{
 		html += "You fail to catch " + randomPokemon.name;
